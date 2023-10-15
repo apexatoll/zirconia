@@ -1,0 +1,8 @@
+module Zirconia
+  class Application
+    attr_reader dir: Pathname
+    attr_reader name: String
+
+    def initialize: (dir: String, name: String) -> void
+  end
+end
