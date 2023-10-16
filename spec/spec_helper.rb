@@ -18,4 +18,5 @@ RSpec.configure do |config|
   config.order = :random
 
   config.include TempDirHelper
+  config.include FileMatchers
 end
