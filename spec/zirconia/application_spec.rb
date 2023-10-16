@@ -312,4 +312,16 @@ RSpec.describe Zirconia::Application, :with_temp_dir do
       end
     end
   end
+
+  describe "#main_file" do
+    subject(:main_file) { application.main_file }
+
+    it "returns a pathname" do
+      expect(main_file).to be_a(Pathname)
+    end
+
+    it "returns the expected path" do
+      expect(main_file.to_s).to eq("#{application.dir}/lib/#{name}.rb")
+    end
+  end
 end

@@ -23,6 +23,10 @@ module Zirconia
       build_path(*, dir: gem_dir, ext:)
     end
 
+    def main_file
+      @main_file ||= lib_path(name, ext: :rb)
+    end
+
     private
 
     def lib_dir
