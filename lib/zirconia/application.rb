@@ -27,6 +27,10 @@ module Zirconia
       @main_file ||= lib_path(name, ext: :rb)
     end
 
+    def to_sym
+      name.split("_").map(&:capitalize).join.to_sym
+    end
+
     private
 
     def lib_dir

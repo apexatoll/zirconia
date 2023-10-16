@@ -324,4 +324,16 @@ RSpec.describe Zirconia::Application, :with_temp_dir do
       expect(main_file.to_s).to eq("#{application.dir}/lib/#{name}.rb")
     end
   end
+
+  describe "#to_sym" do
+    subject(:symbol) { application.to_sym }
+
+    it "returns a symbol" do
+      expect(symbol).to be_a(Symbol)
+    end
+
+    it "returns the expected symbolised application name" do
+      expect(symbol).to eq(:SomeGem)
+    end
+  end
 end

@@ -13,6 +13,8 @@ module Zirconia
 
     def path: (*String, ?ext: Symbol?) -> Pathname
 
+    def to_sym: -> Symbol
+
     attr_reader main_file: Pathname
 
     private
