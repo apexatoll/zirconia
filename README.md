@@ -1,35 +1,131 @@
-# Zirconia
+# Zirconia: A Ruby Gem Synthesiser for RSpec
 
-TODO: Delete this and the text below, and describe your gem
+Zirconia is a lightweight testing utility that is capable of generating\ temporary Ruby Gem applications from within the test suite. 
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/zirconia`. To experiment with that code, run `bin/console` for an interactive prompt.
+Zirconia offers an intuitive interface around the synthetic gem allowing them to be configured and coded from within the test environment.
 
-## Installation
+Use cases include:
+- Testing frameworks written in Ruby
+- Testing autoloaders
+- Testing gem-gem interaction
+- Testing metaprogramming-heavy modules and classes
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Currently, only `RSpec` is supported.
 
-Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+## Quick Start
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+- Add `zirconia` to your Gemfile:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+source "https://rubygems.org"
 
-## Usage
+gem "zirconia"
+```
 
-TODO: Write usage instructions here
+- Require `zirconia/rspec` in your spec_helper:
+```ruby
+require "zirconia/rspec"
+```
 
-## Development
+- Instantiate a Zirconia Gem in your spec using the `with_gem: gem_name` metadata:
+```rspec
+require 'spec_helper'
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+RSpec.describe "Some Gem", with_gem: :some_gem do
+  it "instantiates a Zirconia Gem" do
+    expect(gem).to be_a(Zirconia::Application)
+  end
+end
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+That's it! You can now interact with your newly spun up gem (through `gem`) in `before`/`after` hooks or in the tests themselves.
 
-## Contributing
+Note that calling `:with_gem` without a name argument is valid as well. In this case the gem name will be set to the default (`SomeGem`).
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/zirconia.
 
-## License
+## Overview
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+Interaction, configuration and coding of your fake gem is executed through the `gem` variable set by Zirconia when the `with_gem` RSpec metadata is specified.
+
+Gems are created using the `bundle gem` command within your system's temp directory. As gem creation is delegated to `bundler`, your local system `bundler` configuration will be respected. Gems are removed and Gem modules unsourced around each test.
+
+Adding code to the fake gem is achieved by writing files to their respective path before loading the gem into memory. The `gem` object (an instance of `Zirconia::Application`) defines several instance methods that return `Pathname` objects at canonical locations in the gem filetree. Conventionally these are:
+
+```
+|-+temp_dir/            gem.dir
+  |-+ some_gem/         gem.gem_path
+    |-+ lib/            gem.lib_path
+      |-- some_gem.rb   gem.main_file
+      |-+ some_gem/     gem.path
+        |-- foobar.rb   gem.path("foobar")
+```
+
+### Path Methods
+
+These path methods are return a `Pathname` objects. `Pathname` is a Ruby standard library, and offers a simple interface for paths in a filetree. Of importance may be:
+- `write(string)`: Writes `string` to the file at path
+- `read`: Reads the contents of the file at path
+- `exist?`: Returns whether a file 
+- `mkdir`: Make (non recursive) a directory at the current path
+
+The `_path` methods can be called with a variable amount of string path fragments and an optional extension. String fragments will be joined into the path, whilst the extension will be appended to the path
+
+
+### Methods
+
+#### dir
+- The (temporary) directory that contains the gem
+
+#### gem_path
+- Returns `Pathname` objects for paths in the root gem directory
+- In a conventional Ruby gem filetree this is `some_gem/*.ext`
+
+#### lib_path
+- Returns `Pathname` objects for paths in the gem lib directory
+- In a conventional Ruby gem filetree this is `some_gem/lib/*.ext`
+
+#### path
+- Returns `Pathname` objects for paths in the gem named lib directory
+- In a conventional Ruby gem filetree this is `some_gem/lib/some_gem/*.ext`
+
+#### main_file
+- Returns a `Pathname` object
+- This is the entrypoint to the gem application:
+- In a conventional Ruby gem filetree this is `some_gem/lib/some_gem.rb`
+
+#### load!
+- This method requires the fake gem into your current Ruby scope.
+- Note that this process is not idempotent as gems will not be reloaded.
+
+
+## Example
+
+Say we are creating a fancy new testing framework `spectacular`, and we want to test how it behaves when included in target Ruby gem applications. `spectacular` defines an `Initialiser` class that is run when the gem is included into its target gem.
+
+With `zirconia`, we can spin up a target Gem, write some Ruby code to be injected into the Gem entrypoint, and then test how it behaves when run. This could look something like:
+
+```ruby
+RSpec.describe Spectacular::Initialiser, :with_gem do
+  before do
+    gem.main_file.write(<<~RUBY)
+      require "spectacular"
+
+      module SomeGem
+        extend Spectacular::Initialiser
+      end
+    RUBY
+  end
+
+  describe "requiring Spectacular" do
+    subject(:require_spectacular) { gem.load! }
+
+    it "loads the gem" do
+      expect { require_spectacular }
+        .to change { Object.const_defined?(:SomeGem) }
+        .from(false)
+        .to(true)
+    end
+  end
+end
+```
