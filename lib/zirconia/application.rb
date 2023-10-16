@@ -6,5 +6,9 @@ module Zirconia
       @dir  = Pathname.new(dir).join(name)
       @name = name
     end
+
+    def create!
+      `bundle gem #{dir}`
+    end
   end
 end

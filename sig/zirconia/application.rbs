@@ -4,5 +4,7 @@ module Zirconia
     attr_reader name: String
 
     def initialize: (dir: String, name: String) -> void
+
+    def create!: -> void
   end
 end
