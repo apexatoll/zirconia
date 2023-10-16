@@ -11,6 +11,10 @@ module Zirconia
       `bundle gem #{dir}`
     end
 
+    def load!
+      require main_file.to_s
+    end
+
     def gem_path(*, ext: nil)
       build_path(*, dir:, ext:)
     end

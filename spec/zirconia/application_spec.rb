@@ -49,6 +49,23 @@ RSpec.describe Zirconia::Application, :with_temp_dir do
     end
   end
 
+  describe "#load!" do
+    subject(:load!) { application.load! }
+
+    before { application.create! }
+
+    after do
+      Object.send(:remove_const, :SomeGem) if Object.const_defined?(:SomeGem)
+    end
+
+    it "loads the gem" do
+      expect { load! }
+        .to change { Object.const_defined?(:SomeGem) }
+        .from(false)
+        .to(true)
+    end
+  end
+
   describe "#gem_path" do
     subject(:path) { application.gem_path(*fragments, ext:) }
 
