@@ -48,4 +48,268 @@ RSpec.describe Zirconia::Application, :with_temp_dir do
       expect { create! }.to create_file("#{name}.rb").in(lib_dir)
     end
   end
+
+  describe "#gem_path" do
+    subject(:path) { application.gem_path(*fragments, ext:) }
+
+    context "when no path fragments are specified" do
+      let(:fragments) { [] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the root dir" do
+          expect(path).to eq(application.dir)
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the root dir" do
+          expect(path).to eq(application.dir)
+        end
+      end
+    end
+
+    context "when one path fragment is specified" do
+      let(:fragments) { %w[foobar] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/foobar")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/foobar.rb")
+        end
+      end
+    end
+
+    context "when multiple path fragments are specified" do
+      let(:fragments) { %w[foo bar] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/foo/bar")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/foo/bar.rb")
+        end
+      end
+    end
+  end
+
+  describe "#lib_path" do
+    subject(:path) { application.lib_path(*fragments, ext:) }
+
+    context "when no path fragments are specified" do
+      let(:fragments) { [] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the lib dir" do
+          expect(path.to_s).to eq("#{application.dir}/lib")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the lib dir" do
+          expect(path.to_s).to eq("#{application.dir}/lib")
+        end
+      end
+    end
+
+    context "when one path fragment is specified" do
+      let(:fragments) { %w[foobar] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/foobar")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/foobar.rb")
+        end
+      end
+    end
+
+    context "when multiple path fragments are specified" do
+      let(:fragments) { %w[foo bar] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/foo/bar")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/foo/bar.rb")
+        end
+      end
+    end
+  end
+
+  describe "#path" do
+    subject(:path) { application.path(*fragments, ext:) }
+
+    context "when no path fragments are specified" do
+      let(:fragments) { [] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the gem dir" do
+          expect(path.to_s).to eq("#{application.dir}/lib/#{name}")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the gem dir" do
+          expect(path.to_s).to eq("#{application.dir}/lib/#{name}")
+        end
+      end
+    end
+
+    context "when one path fragment is specified" do
+      let(:fragments) { %w[foobar] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/#{name}/foobar")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/#{name}/foobar.rb")
+        end
+      end
+    end
+
+    context "when multiple path fragments are specified" do
+      let(:fragments) { %w[foo bar] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/#{name}/foo/bar")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/lib/#{name}/foo/bar.rb")
+        end
+      end
+    end
+  end
 end

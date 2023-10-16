@@ -6,5 +6,18 @@ module Zirconia
     def initialize: (dir: String, name: String) -> void
 
     def create!: -> void
+
+    def gem_path: (*String, ?ext: Symbol?) -> Pathname
+
+    def lib_path: (*String, ?ext: Symbol?) -> Pathname
+
+    def path: (*String, ?ext: Symbol?) -> Pathname
+
+    private
+    
+    attr_reader lib_dir: Pathname
+    attr_reader gem_dir: Pathname
+
+    def build_path: (*String, dir: Pathname, ext: Symbol?) -> Pathname
   end
 end
