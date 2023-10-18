@@ -15,16 +15,16 @@ module Zirconia
       require main_file.to_s
     end
 
-    def gem_path(*, ext: nil)
-      build_path(*, dir:, ext:)
+    def gem_path(*fragments, ext: nil)
+      build_path(*fragments, dir:, ext:)
     end
 
-    def lib_path(*, ext: :rb)
-      build_path(*, dir: lib_dir, ext:)
+    def lib_path(*fragments, ext: :rb)
+      build_path(*fragments, dir: lib_dir, ext:)
     end
 
-    def path(*, ext: :rb)
-      build_path(*, dir: gem_dir, ext:)
+    def path(*fragments, ext: :rb)
+      build_path(*fragments, dir: gem_dir, ext:)
     end
 
     def main_file
