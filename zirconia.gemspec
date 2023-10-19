@@ -9,10 +9,10 @@ Gem::Specification.new do |spec|
   spec.summary = "Lightweight testing utility for synthesising Ruby gems"
 
   spec.description = <<~DESCRIPTION
-    Zirconia is a lightweight testing utility that is capable of generating\
+    Zirconia is a lightweight testing utility that is capable of generating \
     temporary Ruby Gem applications from within the test suite.
 
-    Zirconia offers an intuitive interface around the synthetic gem allowing
+    Zirconia offers an intuitive interface around the synthetic gem allowing \
     them to be configured and coded from within the test environment.
   DESCRIPTION
 

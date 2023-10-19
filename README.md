@@ -29,7 +29,7 @@ require "zirconia/rspec"
 ```
 
 - Instantiate a Zirconia Gem in your spec using the `with_gem: gem_name` metadata:
-```rspec
+```ruby
 require 'spec_helper'
 
 RSpec.describe "Some Gem", with_gem: :some_gem do
