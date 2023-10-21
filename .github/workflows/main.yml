@@ -28,6 +28,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+      - name: Fetch gem signatures
+        run: bundle exec rbs collection install
       - name: Type check
         run: bundle exec steep check
 
