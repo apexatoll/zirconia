@@ -1,4 +1,4 @@
-name: "Kangaru CI"
+name: "Zirconia CI"
 
 on:
   push:
