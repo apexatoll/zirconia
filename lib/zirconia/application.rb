@@ -7,8 +7,14 @@ module Zirconia
       @name = name
     end
 
+    def created?
+      @created == true
+    end
+
     def create!
       `bundle gem #{dir}`
+
+      @created = true
     end
 
     def load!

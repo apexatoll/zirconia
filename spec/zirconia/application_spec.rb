@@ -47,6 +47,13 @@ RSpec.describe Zirconia::Application, :with_temp_dir do
     it "generates a main file" do
       expect { create! }.to create_file("#{name}.rb").in(lib_dir)
     end
+
+    it "sets the created flag to true" do
+      expect { create! }
+        .to change { application.created? }
+        .from(false)
+        .to(true)
+    end
   end
 
   describe "#load!" do

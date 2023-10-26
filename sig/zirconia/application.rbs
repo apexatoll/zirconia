@@ -3,7 +3,11 @@ module Zirconia
     attr_reader dir: Pathname
     attr_reader name: String
 
+    @created: bool
+
     def initialize: (dir: String, name: String) -> void
+
+    def created?: -> bool
 
     def create!: -> void
 
