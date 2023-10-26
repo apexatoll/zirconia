@@ -15,6 +15,8 @@ module Zirconia
 
     def path: (*String, ?ext: Symbol?) -> Pathname
 
+    def spec_path: (*String, ?ext: Symbol?) -> Pathname
+
     def to_sym: -> Symbol
 
     attr_reader main_file: Pathname
@@ -23,6 +25,7 @@ module Zirconia
     
     attr_reader lib_dir: Pathname
     attr_reader gem_dir: Pathname
+    attr_reader spec_dir: Pathname
 
     def build_path: (*String, dir: Pathname, ext: Symbol?) -> Pathname
   end

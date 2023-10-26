@@ -330,6 +330,94 @@ RSpec.describe Zirconia::Application, :with_temp_dir do
     end
   end
 
+  describe "#spec_path" do
+    subject(:path) { application.spec_path(*fragments, ext:) }
+
+    context "when no path fragments are specified" do
+      let(:fragments) { [] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the spec dir" do
+          expect(path.to_s).to eq("#{application.dir}/spec")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the spec dir" do
+          expect(path.to_s).to eq("#{application.dir}/spec")
+        end
+      end
+    end
+
+    context "when one path fragment is specified" do
+      let(:fragments) { %w[foobar_spec] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/spec/foobar_spec")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/spec/foobar_spec.rb")
+        end
+      end
+    end
+
+    context "when multiple path fragments are specified" do
+      let(:fragments) { %w[foo bar_spec] }
+
+      context "and extension is not specified" do
+        let(:ext) { nil }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/spec/foo/bar_spec")
+        end
+      end
+
+      context "and extension is specified" do
+        let(:ext) { :rb }
+
+        it "returns a pathname" do
+          expect(path).to be_a(Pathname)
+        end
+
+        it "returns the expected path" do
+          expect(path.to_s).to eq("#{application.dir}/spec/foo/bar_spec.rb")
+        end
+      end
+    end
+  end
+
   describe "#main_file" do
     subject(:main_file) { application.main_file }
 

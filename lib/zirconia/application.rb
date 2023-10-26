@@ -27,6 +27,10 @@ module Zirconia
       build_path(*fragments, dir: gem_dir, ext:)
     end
 
+    def spec_path(*fragments, ext: :rb)
+      build_path(*fragments, dir: spec_dir, ext:)
+    end
+
     def main_file
       @main_file ||= lib_path(name, ext: :rb)
     end
@@ -43,6 +47,10 @@ module Zirconia
 
     def gem_dir
       @gem_dir ||= lib_dir.join(name)
+    end
+
+    def spec_dir
+      @spec_dir ||= dir.join("spec")
     end
 
     def build_path(*fragments, dir:, ext:)

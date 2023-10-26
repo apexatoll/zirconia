@@ -89,6 +89,10 @@ The `_path` methods can be called with a variable amount of string path fragment
 - Returns `Pathname` objects for paths in the gem named lib directory
 - In a conventional Ruby gem filetree this is `some_gem/lib/some_gem/*.ext`
 
+#### spec_path
+- Returns `Pathname` objects for paths in the gem spec directory
+- In a conventional Ruby gem filetree this is `some_gem/spec/*.ext`
+
 #### main_file
 - Returns a `Pathname` object
 - This is the entrypoint to the gem application:
