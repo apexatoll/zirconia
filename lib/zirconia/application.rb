@@ -21,6 +21,14 @@ module Zirconia
       require main_file.to_s
     end
 
+    def exec(command)
+      validate_gem_exists!
+
+      Dir.chdir(dir.to_s) do
+        `bundle exec #{command}`
+      end
+    end
+
     def gem_path(*fragments, ext: nil)
       build_path(*fragments, dir:, ext:)
     end
@@ -66,6 +74,12 @@ module Zirconia
       file = "#{file}.#{ext}" if ext
 
       dir.join(*fragments, file)
+    end
+
+    def validate_gem_exists!
+      return if created?
+
+      raise "gem does not exist"
     end
   end
 end

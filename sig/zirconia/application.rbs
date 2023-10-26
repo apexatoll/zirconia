@@ -13,6 +13,8 @@ module Zirconia
 
     def load!: -> void
 
+    def exec: (String) -> String
+
     def gem_path: (*String, ?ext: Symbol?) -> Pathname
 
     def lib_path: (*String, ?ext: Symbol?) -> Pathname
@@ -32,5 +34,7 @@ module Zirconia
     attr_reader spec_dir: Pathname
 
     def build_path: (*String, dir: Pathname, ext: Symbol?) -> Pathname
+
+    def validate_gem_exists!: -> void
   end
 end

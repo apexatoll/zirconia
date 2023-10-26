@@ -73,6 +73,80 @@ RSpec.describe Zirconia::Application, :with_temp_dir do
     end
   end
 
+  describe "#exec" do
+    subject(:exec) { application.exec(command) }
+
+    context "and application does not exist" do
+      let(:command) { "foobar" }
+
+      it "raises an error" do
+        expect { exec }.to raise_error("gem does not exist")
+      end
+    end
+
+    context "and application exists" do
+      before do
+        application.create!
+
+        failing_spec.write(<<~RUBY)
+          RSpec.describe do
+            it "fails" do
+              expect(true).to be(false)
+            end
+          end
+        RUBY
+
+        passing_spec.write(<<~RUBY)
+          RSpec.describe do
+            it "passes" do
+              expect(true).to be(true)
+            end
+          end
+        RUBY
+      end
+
+      let(:failing_spec) do
+        application.spec_path("failing_spec")
+      end
+
+      let(:passing_spec) do
+        application.spec_path("passing_spec")
+      end
+
+      context "and command exits with 1" do
+        let(:command) { "rspec #{failing_spec}" }
+
+        it "does not raise any errors" do
+          expect { exec }.not_to raise_error
+        end
+
+        it "returns the output string" do
+          expect(exec).to be_a(String)
+        end
+
+        it "returns the expect output" do
+          expect(exec).to match(/FAILED/)
+        end
+      end
+
+      context "and command exits with 0" do
+        let(:command) { "rspec #{passing_spec}" }
+
+        it "does not raise any errors" do
+          expect { exec }.not_to raise_error
+        end
+
+        it "returns the output string" do
+          expect(exec).to be_a(String)
+        end
+
+        it "returns the expect output" do
+          expect(exec).to match(/1 example, 0 failures/)
+        end
+      end
+    end
+  end
+
   describe "#gem_path" do
     subject(:path) { application.gem_path(*fragments, ext:) }
 

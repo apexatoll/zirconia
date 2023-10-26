@@ -102,6 +102,9 @@ The `_path` methods can be called with a variable amount of string path fragment
 - This method requires the fake gem into your current Ruby scope.
 - Note that this process is not idempotent as gems will not be reloaded.
 
+#### exec
+- Accepts a string argument, which is passed to `bundle exec`.
+- Returns the string output of the command
 
 ## Example
 
